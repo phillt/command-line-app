@@ -1,4 +1,5 @@
 #!/usr/bin/env node
-console.log("You are in new-component-with-navbar");
+const CommandManager = require("../../utils/command-manager");
+const config = require("./config");
 
-// pepper:create-component --name=""
+new CommandManager("./commands", config).execute();

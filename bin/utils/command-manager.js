@@ -1,35 +1,63 @@
-const fs = require("fs");
-const path = require("path");
 const argv = require("yargs/yargs");
 
 class CommandManager {
 	#argv;
+	/**
+	 * @type {CommandManagerConfig}
+	 */
+	#options;
 
 	/**
 	 *
 	 * @param {string} commands_directory - The path to the commands directory
-	 * @param {object} options - Settings for this command
-	 * @param {number} options.argument_count - Amount of arguments
+	 * @param {CommandManagerConfig} options - Settings for this command
 	 */
 	constructor(commands_directory, options) {
+		this.#options = options;
 		this.#createArgv(options);
+	}
+
+	#createArgv() {
+		this.#argv = argv(process.argv.slice(2))
+			.usage(this.#options.usage)
+			.command(this.#options.script_name, this.#options.description)
+			.example(this.#options.example, this.#options.example_description)
+			.help("h")
+			.alias("h", "help")
+			.epilog("Hope you like this dude!");
+
 		this.#buildOptions();
 	}
 
-	#createArgv(options) {
-		this.#argv = argv(process.argv.slice(options.argument_count));
-	}
+	#buildOptions() {
+		this.#options.keys.forEach((key) => {
+			this.#argv
+				.describe(key.alias, key.description)
+				.alias(key.alias, key.name)
+				.nargs(key.alias, 1)
+				.describe("t", "The type of component to make");
 
-	#buildOptions(commands_directory = "./commands") {
-		fs.readdir(commands_directory, function (err, files) {
-			if (err) {
-				console.error(err);
-				return;
+			if (key.required) {
+				this.#argv.demandOption([key.alias]);
+			}
+
+			if (key.default) {
+				this.#argv.default(key.alias, key.default);
 			}
 		});
 	}
 
-	#getAllCommandsConfigInDirectory(dir) {}
+	execute() {
+		const args = this.#argv.argv;
+		try {
+			const command = require(`../scripts/${this.#options.script_name}/commands/${
+				args.type
+			}/command.js`);
+			command();
+		} catch (err) {
+			console.error(err);
+		}
+	}
 }
 
 module.exports = CommandManager;
