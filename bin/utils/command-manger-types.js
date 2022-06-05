@@ -17,5 +17,5 @@
  * @property {string} alias - The shorthand name for this command.
  * @property {string} example_description - The description for the provided example.
  * @property {string} script_name - The file name of the script, no extension.
- * @property {Array<CommandKeyDefinition>} keys - The arguments accepted by the command.
+ * @property {Array<CommandKeyDefinition>?} keys - The arguments accepted by the command.
  */

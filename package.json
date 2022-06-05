@@ -5,7 +5,8 @@
   "main": "bin/index.js",
   "bin": {
     "hello": "./bin/index.js",
-    "pepper-create-component": "./bin/scripts/create-component/index.js"
+    "pepper-create-component": "./bin/scripts/create-component/index.js",
+    "pepper-create-response-handler": "./bin/scripts/create-response-handler/index.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
