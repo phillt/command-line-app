@@ -1,5 +1,5 @@
 const config = {
-	script_name: "pepper-create-response-handler",
+	script_name: "create-response-handler",
 	description: "Will generate a hal response handler and tests.",
 	usage: "$0 <type>",
 	example: "$0 --type=hal",

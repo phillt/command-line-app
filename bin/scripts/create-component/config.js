@@ -2,7 +2,7 @@
  * @type {CommandManagerConfig}
  */
 const config = {
-	script_name: "pepper-create-component",
+	script_name: "create-component",
 	description: "Will create a given component type.",
 	usage: "$0 <type> <name> <omit-tests>",
 	example: "$0 --type=single-file-component",
