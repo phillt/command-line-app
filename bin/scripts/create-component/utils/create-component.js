@@ -1,24 +1,26 @@
 const fs = require("fs");
-const prompt = require("prompt-sync")();
 const TextFilters = require("../../../utils/text-filters");
+const HumanApi = require("../../../utils/human-api");
 
 class CreateComponent {
 	name;
-	interpolation_data = {};
 	#interpolated_templates = [];
 	#interpolation_question_map = [];
 	templates = [];
-
-	#INTERNAL_DATA_DELIMINATORS = "$$";
-	#GATHERED_DATA_DELIMINATORS = "%%";
+	humanApi;
 
 	constructor({ templates, interpolation_question_map }) {
 		this.templates = templates;
+		this.humanApi = new HumanApi();
 
 		this.#interpolation_question_map = [
 			...this.#interpolation_question_map,
 			...interpolation_question_map,
 		];
+	}
+
+	get interpolationData() {
+		return this.humanApi.data;
 	}
 
 	buildComponent() {
@@ -30,7 +32,7 @@ class CreateComponent {
 	}
 
 	requestComponentName() {
-		this.name = prompt("What's the name of the component?");
+		this.humanApi.askFor("name", "What's the name of the component?");
 	}
 
 	interpolateTemplates() {
@@ -39,66 +41,34 @@ class CreateComponent {
 			if (typeof template === "function") {
 				interpolated_template = template(
 					{
-						snake_name: TextFilters.toSnakeCase(this.name),
-						name: this.name,
+						snake_name: TextFilters.toSnakeCase(this.humanApi.data.name),
+						name: this.humanApi.data.name,
 						camel_name: this.component_component_camel_name,
 						dash_name: this.component_dash_name,
 					},
-					this.interpolation_data
+					this.humanApi.data
 				);
 			} else {
-				interpolated_template = this.interpolateGatheredData(template);
-				interpolated_template = this.interpolateInternalData(interpolated_template);
+				throw new TypeError(
+					`Expected template to be a function. Got ${typeof template} instead.`
+				);
 			}
 			this.#interpolated_templates.push({ template: interpolated_template, ...data });
 		});
 	}
 
 	get component_component_camel_name() {
-		return TextFilters.toCamelCase(this.name);
+		return TextFilters.toCamelCase(this.humanApi.data.name);
 	}
 
 	get component_dash_name() {
-		return TextFilters.toDashCase(this.name);
+		return TextFilters.toDashCase(this.humanApi.data.name);
 	}
 
 	gatherInterpolationData(interpolation_question_map) {
 		for (let data_point of interpolation_question_map) {
-			this.interpolation_data[data_point.key] = prompt(data_point.question);
+			this.humanApi.askFor(data_point.key, data_point.question);
 		}
-	}
-
-	interpolateGatheredData(template) {
-		return this.interpolateTemplate(
-			template,
-			this.interpolation_data,
-			this.#GATHERED_DATA_DELIMINATORS
-		);
-	}
-
-	interpolateInternalData(template) {
-		const interpolation_data = {
-			["component-camel-name"]: this.component_component_camel_name,
-			["component-dash-name"]: this.component_dash_name,
-			["component-name"]: this.name,
-		};
-
-		return this.interpolateTemplate(
-			template,
-			interpolation_data,
-			this.#INTERNAL_DATA_DELIMINATORS
-		);
-	}
-
-	interpolateTemplate(component_template, interpolation_data, delim) {
-		let interpolated_template = component_template;
-		Object.keys(interpolation_data).forEach((key) => {
-			interpolated_template = interpolated_template.replaceAll(
-				`${delim}${key}${delim}`,
-				interpolation_data[key]
-			);
-		});
-		return interpolated_template;
 	}
 
 	writeComponentFile() {
