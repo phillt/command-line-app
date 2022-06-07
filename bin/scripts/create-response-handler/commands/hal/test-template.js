@@ -1,4 +1,5 @@
 const TextFilter = require("../../../../utils/text-filters/text-filters");
+const PathsBuddy = require("../../../../utils/paths-buddy/paths-buddy");
 
 const testTemplate = function ({ name, dash_name, camel_name, snake_name }, { default_url }) {
 	const api_namespace = snake_name + "_api";
@@ -14,7 +15,7 @@ import {
     validateDefaultApiStateData,
     validateFetchMethod,
     validateFetchMethodHandlesErrors,
-} from "response-handler-tests-factory";
+} from "${PathsBuddy.getRelativePathTo("response-handler-tests-factory")}";
 
 describe("${name} tests", function () {
     validateDefaultApiStateData(${mixin_import}, "${api_namespace}", "${default_url}");
