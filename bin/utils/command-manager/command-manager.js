@@ -50,7 +50,7 @@ class CommandManager {
 	execute() {
 		const args = this.#argv.argv;
 		try {
-			const command = require(`../scripts/${this.#options.script_name}/commands/${
+			const command = require(`../../scripts/${this.#options.script_name}/commands/${
 				args.type
 			}/command.js`);
 			command();
