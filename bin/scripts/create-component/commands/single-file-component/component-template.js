@@ -1,6 +1,7 @@
-const component_template = `
+const component_template = function ({ dash_name }) {
+	return `
 <template>
-	<div ref="$$component-dash-name$$">
+	<div ref="${dash_name}">
 		<!-- Component body -->
 	</div>
 </template>
@@ -9,5 +10,6 @@ const component_template = `
 export default {}
 </script>
 `;
+};
 
 module.exports = component_template;

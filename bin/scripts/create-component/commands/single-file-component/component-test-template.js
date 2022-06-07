@@ -1,13 +1,15 @@
-const component_test_template = `
-import $$component-camel-name$$ from "./$$component-dash-name$$";
+const component_test_template = function ({ name, camel_name, dash_name }) {
+	return `
+import ${camel_name} from "./${dash_name}";
 import { shallowMount } from "@vue/test-utils";
 import { assert } from "@sinonjs/referee";
 
-describe("$$component-name$$ tests.", function () {
+describe("${name} tests.", function () {
 	it("renders", function () {
-	    assert(shallowMount($$component-camel-name$$).find({ref: "$$component-dash-name$$"}).exists());
+	    assert(shallowMount(${camel_name}).find({ref: "${dash_name}"}).exists());
 	});
 });
-	`;
+`;
+};
 
 module.exports = component_test_template;
