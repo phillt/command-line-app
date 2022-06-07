@@ -24,15 +24,15 @@ class TemplateManager {
 	}
 
 	buildComponent() {
-		this.requestComponentName();
+		this.requestFileName();
 		this.gatherInterpolationData(this.#interpolation_question_map);
 		this.interpolateTemplates();
 		this.writeComponentFile();
 		console.log("Done dude!");
 	}
 
-	requestComponentName() {
-		this.humanApi.askFor("name", "What's the name of the component?");
+	requestFileName() {
+		this.humanApi.askFor("name", "What's the name of this file?");
 	}
 
 	interpolateTemplates() {
@@ -43,8 +43,8 @@ class TemplateManager {
 					{
 						snake_name: TextFilters.toSnakeCase(this.humanApi.data.name),
 						name: this.humanApi.data.name,
-						camel_name: this.component_component_camel_name,
-						dash_name: this.component_dash_name,
+						camel_name: this.camel_name,
+						dash_name: this.dash_name,
 					},
 					this.humanApi.data
 				);
@@ -57,11 +57,11 @@ class TemplateManager {
 		});
 	}
 
-	get component_component_camel_name() {
+	get camel_name() {
 		return TextFilters.toCamelCase(this.humanApi.data.name);
 	}
 
-	get component_dash_name() {
+	get dash_name() {
 		return TextFilters.toDashCase(this.humanApi.data.name);
 	}
 
@@ -72,10 +72,10 @@ class TemplateManager {
 	}
 
 	writeComponentFile() {
-		fs.mkdirSync(`./${this.component_dash_name}`);
+		fs.mkdirSync(`./${this.dash_name}`);
 		this.#interpolated_templates.forEach(({ template, extension }) => {
 			fs.writeFile(
-				`./${this.component_dash_name}/${this.component_dash_name}${extension}`,
+				`./${this.dash_name}/${this.dash_name}${extension}`,
 				template.trim(),
 				function (err) {
 					if (err) {

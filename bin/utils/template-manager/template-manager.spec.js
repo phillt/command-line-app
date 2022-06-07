@@ -40,9 +40,9 @@ describe("CreateComponent", function () {
 		const askForStub = sandbox.stub(HumanApi.prototype, "askFor").returns(expected_value);
 
 		const sut = new CreateComponent(default_options);
-		sut.requestComponentName();
+		sut.requestFileName();
 
-		sinon.assert.calledWith(askForStub, "name", "What's the name of the component?");
+		sinon.assert.calledWith(askForStub, "name", "What's the name of this file?");
 	});
 
 	it("get interpolationData", function () {
