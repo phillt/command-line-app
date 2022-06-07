@@ -6,7 +6,7 @@ class TextFilters {
 			first_word = first_word.toLowerCase();
 
 			let last_words_cased = last_words.map(
-				(last_word) => last_word.charAt(0).toUpperCase() + last_word.slice(1)
+				(last_word) => last_word.charAt(0).toUpperCase() + last_word.slice(1).toLowerCase()
 			);
 
 			return [first_word, ...last_words_cased].toString().replaceAll(",", "");
