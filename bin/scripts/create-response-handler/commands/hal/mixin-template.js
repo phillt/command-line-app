@@ -9,7 +9,7 @@ export default {
             ${snake_api_namespace}: {
                 loading: false,
                 error: null,
-                url: ${default_url}",
+                url: "${default_url}",
             }
         }
     },
@@ -20,13 +20,15 @@ export default {
         // Abstract response data here
     },
     methods: {
-        ${TextFilter.toCamelCase(`fetch ` + name)}: async function (url = this.url) {
+        ${TextFilter.toCamelCase(
+			`fetch ` + name
+		)}: async function (url = this.${snake_api_namespace}.url) {
             this.$set(this.${snake_api_namespace}, "loading", true);
             this.$set(this.${snake_api_namespace}, "error", null);
 
             try {
                 await this.$hal.api.fetch(url);
-                if (url !== this.year_response_api.url) {
+                if (url !== this.${snake_api_namespace}.url) {
                     this.$set(this.${snake_api_namespace}, "url", url);
                 }
 

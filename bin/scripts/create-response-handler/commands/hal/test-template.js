@@ -1,8 +1,12 @@
 const TextFilter = require("../../../../utils/text-filters");
 
 const testTemplate = function ({ name, dash_name, camel_name, snake_name }, { default_url }) {
+	const api_namespace = snake_name + "_api";
+	const api_response = snake_name + "_response";
+	const mixin_import = camel_name;
+
 	return `
-import ${camel_name} from "./${dash_name}";
+import ${mixin_import} from "./${dash_name}";
 // Update to correct path!
 import {
     validateComputedDataWithResponse,
@@ -13,29 +17,27 @@ import {
 } from "response-handler-tests-factory";
 
 describe("${name} tests", function () {
-    validateDefaultApiStateData(${camel_name}, "${snake_name}_api", "/numberstracker/api/member/22055/year/");
+    validateDefaultApiStateData(${mixin_import}, "${api_namespace}", "${default_url}");
 
     const provideExpectedComputedValues = function* () {
-        yield ["${camel_name}_response", null];
+        yield ["${api_response}", null];
     };
 
-    validateDefaultApiComputedData(${camel_name}, provideExpectedComputedValues);
-
-    const provideExpectedComputedValuesWithResponse = function* () {
-        yield ["year_response", halYearResponseSample, halYearResponseSample];
-       
-    };
+    validateDefaultApiComputedData(${mixin_import}, provideExpectedComputedValues);
 
 	// @todo validate year with response
     // validateComputedDataWithResponse();
 
     const provideFetchMethodArgumentsAndExpectedUrl = function* () {
         yield ["${TextFilter.toCamelCase(`fetch ${name}`)}", [], "${default_url}"];
+        yield ["${TextFilter.toCamelCase(
+			`fetch ${name}`
+		)}", ["with/arbitrary/url"], "with/arbitrary/url"];
     };
 
-    validateFetchMethod(${camel_name}, "${snake_name}_api", provideFetchMethodArgumentsAndExpectedUrl);
+    validateFetchMethod(${mixin_import}, "${api_namespace}", provideFetchMethodArgumentsAndExpectedUrl);
 
-    validateFetchMethodHandlesErrors(${camel_name}, "${snake_name}_api", "${TextFilter.toCamelCase(
+    validateFetchMethodHandlesErrors(${mixin_import}, "${api_namespace}", "${TextFilter.toCamelCase(
 		`fetch ${name}`
 	)}");
 });
