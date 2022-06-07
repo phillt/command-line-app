@@ -1,9 +1,9 @@
 const component_template = require("./component-template");
 const test_template = require("./component-test-template");
-const CreateComponent = require("../../../../utils/template-manager/template-manager");
+const TemplateManager = require("../../../../utils/template-manager/template-manager");
 
 const singleFileComponent = function () {
-	const createComponent = new CreateComponent({
+	const templateManager = new TemplateManager({
 		templates: [
 			{
 				template: component_template,
@@ -17,7 +17,7 @@ const singleFileComponent = function () {
 		interpolation_question_map: [],
 	});
 
-	createComponent.buildComponent();
+	templateManager.buildComponent();
 };
 
 module.exports = singleFileComponent;
