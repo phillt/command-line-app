@@ -1,5 +1,5 @@
 const fs = require("fs");
-const TextFilters = require("../../../utils/text-filters");
+const TextFilters = require("../../../utils/text-filters/text-filters");
 const HumanApi = require("../../../utils/human-api");
 
 class CreateComponent {

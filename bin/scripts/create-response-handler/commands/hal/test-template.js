@@ -1,4 +1,4 @@
-const TextFilter = require("../../../../utils/text-filters");
+const TextFilter = require("../../../../utils/text-filters/text-filters");
 
 const testTemplate = function ({ name, dash_name, camel_name, snake_name }, { default_url }) {
 	const api_namespace = snake_name + "_api";
