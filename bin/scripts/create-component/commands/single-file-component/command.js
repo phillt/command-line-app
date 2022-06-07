@@ -1,6 +1,6 @@
 const component_template = require("./component-template");
 const test_template = require("./component-test-template");
-const CreateComponent = require("../../utils/create-component");
+const CreateComponent = require("../../../../utils/template-manager/template-manager");
 
 const singleFileComponent = function () {
 	const createComponent = new CreateComponent({

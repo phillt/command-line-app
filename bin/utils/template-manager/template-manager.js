@@ -1,8 +1,8 @@
 const fs = require("fs");
-const TextFilters = require("../../../utils/text-filters/text-filters");
-const HumanApi = require("../../../utils/human-api");
+const TextFilters = require("../text-filters/text-filters");
+const HumanApi = require("../human-api");
 
-class CreateComponent {
+class TemplateManager {
 	name;
 	#interpolated_templates = [];
 	#interpolation_question_map = [];
@@ -87,4 +87,4 @@ class CreateComponent {
 	}
 }
 
-module.exports = CreateComponent;
+module.exports = TemplateManager;

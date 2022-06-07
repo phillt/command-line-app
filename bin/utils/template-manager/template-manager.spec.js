@@ -1,7 +1,7 @@
 const sinon = require("sinon");
 const { assert } = require("@sinonjs/referee");
-const CreateComponent = require("./create-component");
-const HumanApi = require("../../../utils/human-api");
+const CreateComponent = require("./template-manager");
+const HumanApi = require("../human-api");
 
 const sandbox = sinon.createSandbox();
 

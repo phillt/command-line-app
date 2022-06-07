@@ -1,4 +1,4 @@
-const CreateComponent = require("../../../create-component/utils/create-component");
+const CreateComponent = require("../../../../utils/template-manager/template-manager");
 const mixin_template = require("./mixin-template");
 const test_template = require("./test-template");
 
