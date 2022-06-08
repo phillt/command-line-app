@@ -1,4 +1,4 @@
-const component_test_template = function ({ name, camel_name, dash_name }, { injection }) {
+const component_test_template = function ({ name, camel_name, dash_name }, { injection, props }) {
 	const buildDefaultOptions = function () {
 		if (!injection) {
 			return "";
@@ -21,9 +21,9 @@ ${buildDefaultOptions()}
 
 describe("${name} tests.", function () {
 	it("renders", function () {
-	    assert(shallowMount(${camel_name}).find({ref: "${dash_name}"}${
+			assert(shallowMount(${camel_name}${
 		injection ? ", default_options" : ""
-	}).exists());
+	}).find({ref: "${dash_name}"}).exists());
 	});
 });
 `;
