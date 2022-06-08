@@ -44,7 +44,16 @@ class HumanApi {
 		return question.hasOwnProperty("optional");
 	}
 
+	hr() {
+		console.log("----------------------------------------");
+	}
+
+	h(heading) {
+		console.log(`----------------${heading}----------------`);
+	}
+
 	survey(survey) {
+		this.hr();
 		for (const question of survey) {
 			if (
 				HumanApi.#questionIsOptional(question) &&
