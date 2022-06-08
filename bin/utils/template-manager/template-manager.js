@@ -66,9 +66,7 @@ class TemplateManager {
 	}
 
 	gatherInterpolationData(interpolation_question_map) {
-		for (let data_point of interpolation_question_map) {
-			this.humanApi.askFor(data_point.key, data_point.question);
-		}
+		this.humanApi.survey(interpolation_question_map);
 	}
 
 	writeComponentFile() {
