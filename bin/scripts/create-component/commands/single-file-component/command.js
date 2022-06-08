@@ -14,7 +14,28 @@ const singleFileComponent = function () {
 				extension: ".spec.js",
 			},
 		],
-		interpolation_question_map: [],
+		interpolation_question_map: [
+			{
+				key: "injection",
+				optional: "Add injected data?",
+				continue_question: "Add another?",
+				collection: [
+					{ key: "injection", question: "Name of provided value?" },
+					{ key: "sample_injection", question: "Sample value of this injected value: " },
+				],
+			},
+			{
+				key: "props",
+				optional: "Add props?",
+				continue_question: "Add another?",
+				collection: [
+					{ key: "prop_name", question: "Prop name: " },
+					{ key: "prop_type", question: "Prop type: " },
+					{ key: "required", question: "required (true/false)? " },
+					{ key: "default_value", question: "default value (press enter if none)? " },
+				],
+			},
+		],
 	});
 
 	templateManager.buildComponent();
