@@ -5,6 +5,7 @@ class HumanApi {
 	OBJECT = "object";
 	COLLECTION = "collection";
 	KEY_VALUE_PAIR = "key_value_pair";
+	ASK_AND_DEFAULT = "ask_and_default";
 
 	askFor(key, question) {
 		this.#data[key] = prompt(question);
@@ -35,6 +36,10 @@ class HumanApi {
 
 		if (question.hasOwnProperty("object")) {
 			return this.OBJECT;
+		}
+
+		if (question.hasOwnProperty("optional") && question.hasOwnProperty("value")) {
+			return this.ASK_AND_DEFAULT;
 		}
 
 		return this.KEY_VALUE_PAIR;
@@ -75,10 +80,19 @@ class HumanApi {
 				case this.OBJECT:
 					this.askForObject(question.key, question.object);
 					break;
+				case this.ASK_AND_DEFAULT:
+					this.askAndDefault(question.key, question.question, question.value);
+					break;
 				case this.KEY_VALUE_PAIR:
 				default:
 					this.askFor(question.key, question.question);
 			}
+		}
+	}
+
+	askAndDefault(key, question, value) {
+		if (HumanApi.yesOrNo(question)) {
+			this.#data[key] = value;
 		}
 	}
 
