@@ -8,10 +8,15 @@ class TemplateManager {
 	#interpolation_question_map = [];
 	templates = [];
 	humanApi;
+	write_path = "./";
+	interpolation_data = null;
 
-	constructor({ templates, interpolation_question_map }) {
-		this.templates = templates;
+	constructor({ interpolation_data, templates, interpolation_question_map, write_path = "./" }) {
 		this.humanApi = new HumanApi();
+
+		this.interpolation_data = interpolation_data;
+		this.templates = templates;
+		this.write_path = write_path;
 
 		this.#interpolation_question_map = [
 			...this.#interpolation_question_map,
@@ -23,12 +28,22 @@ class TemplateManager {
 		return this.humanApi.data;
 	}
 
+	/**
+	 * @deprecated - use buildTemplates
+	 */
 	buildComponent() {
 		this.requestFileName();
 		this.gatherInterpolationData(this.#interpolation_question_map);
 		this.interpolateTemplates();
 		this.writeComponentFile();
 		console.log("Done dude!");
+	}
+
+	buildTemplates() {
+		this.requestFileName();
+		this.gatherInterpolationData(this.#interpolation_question_map);
+		this.interpolateTemplates();
+		return this.getInterpolatedTemplates();
 	}
 
 	requestFileName() {
@@ -46,7 +61,7 @@ class TemplateManager {
 						camel_name: this.camel_name,
 						dash_name: this.dash_name,
 					},
-					this.humanApi.data
+					this.interpolation_data
 				);
 			} else {
 				throw new TypeError(
@@ -69,11 +84,18 @@ class TemplateManager {
 		this.humanApi.survey(interpolation_question_map);
 	}
 
+	getInterpolatedTemplates() {
+		return this.#interpolated_templates;
+	}
+
+	/**
+	 * @deprecated - Use PathsBuddy.writeFiles() to write the templates. Use getInterpolatedTemplates to get the templates.
+	 */
 	writeComponentFile() {
-		fs.mkdirSync(`./${this.dash_name}`);
+		fs.mkdirSync(`${this.write_path}${this.dash_name}`);
 		this.#interpolated_templates.forEach(({ template, extension }) => {
 			fs.writeFile(
-				`./${this.dash_name}/${this.dash_name}${extension}`,
+				`${this.write_path}${this.dash_name}/${this.dash_name}${extension}`,
 				template.trim(),
 				function (err) {
 					if (err) {
