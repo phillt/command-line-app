@@ -7,13 +7,10 @@ class TemplateManager {
 	#interpolated_templates = [];
 	#interpolation_question_map = [];
 	templates = [];
-	humanApi;
 	write_path = "./";
 	interpolation_data = null;
 
 	constructor({ interpolation_data, templates, interpolation_question_map, write_path = "./" }) {
-		this.humanApi = new HumanApi();
-
 		this.interpolation_data = interpolation_data;
 		this.templates = templates;
 		this.write_path = write_path;
@@ -22,10 +19,6 @@ class TemplateManager {
 			...this.#interpolation_question_map,
 			...interpolation_question_map,
 		];
-	}
-
-	get interpolationData() {
-		return this.humanApi.data;
 	}
 
 	/**
@@ -40,29 +33,16 @@ class TemplateManager {
 	}
 
 	buildTemplates() {
-		this.requestFileName();
 		this.gatherInterpolationData(this.#interpolation_question_map);
 		this.interpolateTemplates();
 		return this.getInterpolatedTemplates();
-	}
-
-	requestFileName() {
-		this.humanApi.askFor("name", "What's the name of this file?");
 	}
 
 	interpolateTemplates() {
 		this.templates.forEach(({ template, ...data }) => {
 			let interpolated_template;
 			if (typeof template === "function") {
-				interpolated_template = template(
-					{
-						snake_name: TextFilters.toSnakeCase(this.humanApi.data.name),
-						name: this.humanApi.data.name,
-						camel_name: this.camel_name,
-						dash_name: this.dash_name,
-					},
-					this.interpolation_data
-				);
+				interpolated_template = template(this.interpolation_data);
 			} else {
 				throw new TypeError(
 					`Expected template to be a function. Got ${typeof template} instead.`
@@ -70,18 +50,6 @@ class TemplateManager {
 			}
 			this.#interpolated_templates.push({ template: interpolated_template, ...data });
 		});
-	}
-
-	get camel_name() {
-		return TextFilters.toCamelCase(this.humanApi.data.name);
-	}
-
-	get dash_name() {
-		return TextFilters.toDashCase(this.humanApi.data.name);
-	}
-
-	gatherInterpolationData(interpolation_question_map) {
-		this.humanApi.survey(interpolation_question_map);
 	}
 
 	getInterpolatedTemplates() {
