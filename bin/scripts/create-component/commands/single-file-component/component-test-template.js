@@ -1,4 +1,9 @@
-const component_test_template = function ({ name, camel_name, dash_name }, { injection, props }) {
+const TextFilter = require("../../../../utils/text-filters/text-filters");
+
+const component_test_template = function ({ name, injection }) {
+	const camel_name = TextFilter.toCamelCase(name);
+	const dash_name = TextFilter.toDashCase(name);
+
 	const buildDefaultOptions = function () {
 		if (!injection) {
 			return "";

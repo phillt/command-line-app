@@ -1,7 +1,11 @@
 const TextFilter = require("../../../../utils/text-filters/text-filters");
 const PathsBuddy = require("../../../../utils/paths-buddy/paths-buddy");
 
-const testTemplate = function ({ name, dash_name, camel_name, snake_name }, { default_url }) {
+const testTemplate = function ({ name, default_url }) {
+	const dash_name = TextFilter.toDashCase(name);
+	const camel_name = TextFilter.toCamelCase(name);
+	const snake_name = TextFilter.toSnakeCase(name);
+
 	const api_namespace = snake_name + "_api";
 	const api_response = snake_name + "_response";
 	const mixin_import = camel_name;

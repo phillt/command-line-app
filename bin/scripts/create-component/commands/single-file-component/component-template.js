@@ -1,4 +1,8 @@
-const component_template = function ({ dash_name }, { injection, props }) {
+const TextFilter = require("../../../../utils/text-filters/text-filters");
+
+const component_template = function ({ name, injection, props }) {
+	const dash_name = TextFilter.toDashCase(name);
+
 	const buildInjection = function () {
 		if (!injection) {
 			return "";
