@@ -2,24 +2,21 @@ const component_template = require("./component-template");
 const test_template = require("./component-test-template");
 const TemplateManager = require("../../../../utils/template-manager/template-manager");
 const HumanApi = require("../../../../utils/human-api");
-const TextFilters = require("../../../../utils/text-filters/text-filters");
+const path_map = require("../../../../salt-path-maps");
 const PathsBuddy = require("../../../../utils/paths-buddy/paths-buddy");
+const SETTINGS = require("../../../../../settings");
+const TextFilters = require("../../../../utils/text-filters/text-filters");
 
 const singleFileComponent = function () {
-	const humanApi = new HumanApi();
-	humanApi.survey([
+	const interpolation_question_map = [
+		{
+			key: "component_type",
+			question: "What kind of component is this? (atom, molecule, organism)",
+			choices: ["atom", "molecule", "template", "organism"],
+		},
 		{
 			key: "name",
 			question: "What is the name of your component?",
-		},
-		{
-			key: "injection",
-			optional: "Add injected data?",
-			continue_question: "Add another?",
-			collection: [
-				{ key: "injection", question: "Name of provided value?" },
-				{ key: "sample_injection", question: "Sample value of this injected value: " },
-			],
 		},
 		{
 			key: "props",
@@ -32,7 +29,16 @@ const singleFileComponent = function () {
 				{ key: "default_value", question: "default value (press enter if none)? " },
 			],
 		},
-	]);
+		{
+			key: "slots",
+			optional: "Slotted?",
+			continue_question: "Add another?",
+			collection: [{ key: "name", question: "Slot name: " }],
+		},
+	];
+
+	const humanApi = new HumanApi();
+	humanApi.survey(interpolation_question_map);
 
 	const templateManager = new TemplateManager({
 		interpolation_data: humanApi.data,
@@ -53,7 +59,7 @@ const singleFileComponent = function () {
 	const templates = templateManager.buildTemplates();
 
 	try {
-		const write_path = process.cwd();
+		const write_path = SETTINGS.SALT_PATH + path_map[humanApi.data.component_type.trim() + "s"];
 		PathsBuddy.writeFiles(write_path, templates);
 		console.log("New component created at: ", write_path);
 	} catch (e) {

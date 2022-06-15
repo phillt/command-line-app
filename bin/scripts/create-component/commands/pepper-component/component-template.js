@@ -1,13 +1,13 @@
-const TextFilter = require("../../../../utils/text-filters/text-filters");
 const ComponentBuildingTools = require("../../utils/component-building-tools");
+const TextFilters = require("../../../../utils/text-filters/text-filters");
 
-const component_template = function ({ name, injection, props }) {
-	const dash_name = TextFilter.toDashCase(name);
-
+const component_template = function ({ name, injection, props, slots }) {
+	const dash_name = TextFilters.toDashCase(name);
 	return `
 <template>
 	<div ref="${dash_name}">
 		<!-- Component body -->
+		${ComponentBuildingTools.buildSlots(slots)}
 	</div>
 </template>
 

@@ -5,6 +5,8 @@ class HumanApi {
 	OBJECT = "object";
 	COLLECTION = "collection";
 	KEY_VALUE_PAIR = "key_value_pair";
+	ASK_AND_DEFAULT = "ask_and_default";
+	SELECT = "select";
 
 	askFor(key, question) {
 		this.#data[key] = prompt(question);
@@ -29,12 +31,20 @@ class HumanApi {
 	}
 
 	#checkSurveyQuestionType(question) {
+		if (question.hasOwnProperty("choices")) {
+			return this.SELECT;
+		}
+
 		if (question.hasOwnProperty("collection")) {
 			return this.COLLECTION;
 		}
 
 		if (question.hasOwnProperty("object")) {
 			return this.OBJECT;
+		}
+
+		if (question.hasOwnProperty("optional") && question.hasOwnProperty("value")) {
+			return this.ASK_AND_DEFAULT;
 		}
 
 		return this.KEY_VALUE_PAIR;
@@ -65,6 +75,9 @@ class HumanApi {
 			const question_type = this.#checkSurveyQuestionType(question);
 
 			switch (question_type) {
+				case this.SELECT:
+					this.askFromSelection(question.key, question.choices, question.question);
+					break;
 				case this.COLLECTION:
 					this.askForCollection(
 						question.key,
@@ -75,11 +88,18 @@ class HumanApi {
 				case this.OBJECT:
 					this.askForObject(question.key, question.object);
 					break;
+				case this.ASK_AND_DEFAULT:
+					this.askAndDefault(question.key, question.question, question.value);
+					break;
 				case this.KEY_VALUE_PAIR:
 				default:
 					this.askFor(question.key, question.question);
 			}
 		}
+	}
+
+	askAndDefault(key, value) {
+		this.#data[key] = value;
 	}
 
 	askForObject(object_key, interpolation_data_group) {
@@ -91,6 +111,30 @@ class HumanApi {
 			confirm_question,
 			interpolation_data_group
 		);
+	}
+
+	/**
+	 *
+	 * @param {string} key
+	 * @param {Array<string>} selection
+	 * @param {string} question
+	 */
+	askFromSelection(key, selection, question) {
+		const choose_from = `: Please choose from the following ${selection
+			.map((item, index) => ` ${item} (${index})`)
+			.join()}`;
+		const response = this.normalizedPrompt(question + choose_from);
+
+		if (isNaN(response) && selection.includes(response)) {
+			this.#data[key] = response;
+			return;
+		} else if (!isNaN(response) && selection[response]) {
+			this.#data[key] = selection[response];
+			return;
+		}
+
+		console.log("Please make a valid selection.");
+		this.askFromSelection(selection, question, key);
 	}
 
 	static #collectObject(interpolation_data_group) {
@@ -114,6 +158,19 @@ class HumanApi {
 		}
 
 		return collection;
+	}
+
+	normalize(text) {
+		return text.toLowerCase();
+	}
+
+	normalizedPrompt(question) {
+		const response = prompt(question);
+
+		if (isNaN(Number(response))) {
+			return this.normalize(response);
+		}
+		return Number(response);
 	}
 }
 
