@@ -6,6 +6,7 @@ class HumanApi {
 	COLLECTION = "collection";
 	KEY_VALUE_PAIR = "key_value_pair";
 	ASK_AND_DEFAULT = "ask_and_default";
+	SELECT = "select";
 
 	askFor(key, question) {
 		this.#data[key] = prompt(question);
@@ -30,6 +31,10 @@ class HumanApi {
 	}
 
 	#checkSurveyQuestionType(question) {
+		if (question.hasOwnProperty("choices")) {
+			return this.SELECT;
+		}
+
 		if (question.hasOwnProperty("collection")) {
 			return this.COLLECTION;
 		}
@@ -70,6 +75,9 @@ class HumanApi {
 			const question_type = this.#checkSurveyQuestionType(question);
 
 			switch (question_type) {
+				case this.SELECT:
+					this.askFromSelection(question.key, question.choices, question.question);
+					break;
 				case this.COLLECTION:
 					this.askForCollection(
 						question.key,
@@ -90,10 +98,8 @@ class HumanApi {
 		}
 	}
 
-	askAndDefault(key, question, value) {
-		if (HumanApi.yesOrNo(question)) {
-			this.#data[key] = value;
-		}
+	askAndDefault(key, value) {
+		this.#data[key] = value;
 	}
 
 	askForObject(object_key, interpolation_data_group) {
@@ -105,6 +111,30 @@ class HumanApi {
 			confirm_question,
 			interpolation_data_group
 		);
+	}
+
+	/**
+	 *
+	 * @param {string} key
+	 * @param {Array<string>} selection
+	 * @param {string} question
+	 */
+	askFromSelection(key, selection, question) {
+		const choose_from = `: Please choose from the following ${selection
+			.map((item, index) => ` ${item} (${index})`)
+			.join()}`;
+		const response = this.normalizedPrompt(question + choose_from);
+
+		if (isNaN(response) && selection.includes(response)) {
+			this.#data[key] = response;
+			return;
+		} else if (!isNaN(response) && selection[response]) {
+			this.#data[key] = selection[response];
+			return;
+		}
+
+		console.log("Please make a valid selection.");
+		this.askFromSelection(selection, question, key);
 	}
 
 	static #collectObject(interpolation_data_group) {
@@ -128,6 +158,19 @@ class HumanApi {
 		}
 
 		return collection;
+	}
+
+	normalize(text) {
+		return text.toLowerCase();
+	}
+
+	normalizedPrompt(question) {
+		const response = prompt(question);
+
+		if (isNaN(Number(response))) {
+			return this.normalize(response);
+		}
+		return Number(response);
 	}
 }
 
