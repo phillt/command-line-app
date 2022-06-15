@@ -18,17 +18,22 @@ class PathsBuddy {
 	}
 
 	static writeFile(write_path, file_name, extension, template) {
-		fs.mkdirSync(`${write_path}${file_name}`);
+		if (typeof write_path !== "string") {
+			throw new TypeError(
+				`Expected write_path to be of type string, got ${typeof write_path} instead.`
+			);
+		}
+		const path = `${write_path}/${file_name}`;
 
-		fs.writeFile(
-			`${write_path}${file_name}/${file_name}${extension}`,
-			template.trim(),
-			function (err) {
-				if (err) {
-					return console.log("Something went wrong creating the file", err);
-				}
+		if (!fs.existsSync(path)) {
+			fs.mkdirSync(path);
+		}
+
+		fs.writeFile(`${path}/${file_name}${extension}`, template.trim(), function (err) {
+			if (err) {
+				return console.log("Something went wrong creating the file", err);
 			}
-		);
+		});
 	}
 }
 
