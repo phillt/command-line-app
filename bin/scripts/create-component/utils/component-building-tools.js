@@ -47,6 +47,17 @@ class ComponentBuildingTools {
 		}`;
 	}
 
+	static buildSlots(slots) {
+		let slot_templates = "";
+		slots.forEach(
+			({ name }) =>
+				(slot_templates += `
+		${ComponentBuildingTools.buildSlot(name)}
+		`)
+		);
+		return slot_templates;
+	}
+
 	static buildSlot(name = "") {
 		if (name) {
 			return `<slot name="${name}" />`;
