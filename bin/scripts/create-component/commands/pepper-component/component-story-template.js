@@ -8,7 +8,7 @@ const componentStoryTemplate = function ({ name, component_type, slots, props })
 import ${camel_name} from './${dash_name}';
 
 export default {
-    title: 'components/${component_type}/${dash_name}',
+    title: 'components/${component_type}s/${dash_name}',
     component: ${camel_name},
 };
 
