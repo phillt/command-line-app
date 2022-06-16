@@ -3,8 +3,6 @@ const mixin_template = require("./mixin-template");
 const test_template = require("./test-template");
 const HumanApi = require("../../../../utils/human-api");
 const TextFilters = require("../../../../utils/text-filters/text-filters");
-const SETTINGS = require("../../../../../settings");
-const path_map = require("../../../../salt-path-maps");
 const PathsBuddy = require("../../../../utils/paths-buddy/paths-buddy");
 
 const createHalMixin = function () {

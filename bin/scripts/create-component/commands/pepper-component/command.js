@@ -6,6 +6,7 @@ const path_map = require("../../../../salt-path-maps");
 const PathsBuddy = require("../../../../utils/paths-buddy/paths-buddy");
 const SETTINGS = require("../../../../../settings");
 const TextFilters = require("../../../../utils/text-filters/text-filters");
+const story_template = require("./component-story-template");
 
 const singleFileComponent = function () {
 	const interpolation_question_map = [
@@ -27,6 +28,7 @@ const singleFileComponent = function () {
 				{ key: "prop_type", question: "Prop type: " },
 				{ key: "required", question: "required (true/false)? " },
 				{ key: "default_value", question: "default value (press enter if none)? " },
+				{ key: "sample_value", question: "sample value: " },
 			],
 		},
 		{
@@ -52,6 +54,11 @@ const singleFileComponent = function () {
 				name: TextFilters.toDashCase(humanApi.data.name),
 				template: test_template,
 				extension: ".spec.js",
+			},
+			{
+				name: TextFilters.toDashCase(humanApi.data.name),
+				template: story_template,
+				extension: ".stories.js",
 			},
 		],
 	});
