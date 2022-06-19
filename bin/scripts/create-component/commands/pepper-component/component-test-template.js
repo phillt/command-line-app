@@ -14,7 +14,7 @@ describe("${name} tests.", function () {
 	it("renders", function () {
 			assert(shallowMount(${camel_name}${
 		injection ? ", default_options" : ""
-	}).find({ref: "${dash_name}"}).exists());
+	}).findComponent({ref: "${dash_name}"}).exists());
 	});
 	
 	${TestBuildingTools.buildSlotTests(camel_name, slots)}
