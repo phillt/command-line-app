@@ -10,7 +10,7 @@ const createHalMixin = function () {
 	humanApi.survey([
 		{
 			key: "name",
-			question: "file name (use dash for spaces IE: my-response). no extension.",
+			question: "File name (use dash for spaces IE: my-response). no extension.",
 		},
 		{
 			key: "default_url",
@@ -18,7 +18,7 @@ const createHalMixin = function () {
 		},
 		{
 			key: "request_methods",
-			optional: "Add request type?",
+			optional: "Add request method?",
 			continue_question: "Add another?",
 			collection: [
 				{
@@ -28,7 +28,7 @@ const createHalMixin = function () {
 				},
 				{
 					key: "name",
-					question: "request name? (camel case IE myRequestMethod)",
+					question: "Request method name? (camel case IE myRequestMethod)",
 				},
 			],
 		},
@@ -40,11 +40,11 @@ const createHalMixin = function () {
 				{
 					key: "import",
 					question:
-						"variable we will be importing. If not default, please include curly braces: { my_var } ",
+						"Variable we will be importing. If not default, please include curly braces: { my_var } ",
 				},
 				{
 					key: "from",
-					question: "from path, please don\t include quotes: ie path/to/file.js",
+					question: "From path, please don't include quotes: ie path/to/file.js",
 				},
 			],
 		},
@@ -55,7 +55,7 @@ const createHalMixin = function () {
 			collection: [
 				{
 					key: "key",
-					question: "computed name?",
+					question: "Computed name? (camel case)",
 				},
 				{
 					key: "default_value",
