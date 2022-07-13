@@ -13,9 +13,17 @@ const naming_helper = function ({
 	const camel_name = TextFilter.toCamelCase(name_no_dash);
 	const dash_name = TextFilter.toDashCase(name_no_dash);
 	const response_name = TextFilter.toCamelCase(`${name_no_dash} response`);
-	const raw_response_import_normalized = raw_response.import
-		.replaceAll("{", "")
-		.replaceAll("}", "");
+
+	let raw_response_import_normalized;
+	if (raw_response) {
+		raw_response_import_normalized = raw_response.import
+			.replaceAll("{", "")
+			.replaceAll("}", "");
+	}
+
+	const getRequestTypeByType = function (type) {
+		return request_methods.find((method) => method.type === type);
+	};
 
 	return {
 		response_name,
@@ -28,6 +36,7 @@ const naming_helper = function ({
 		raw_response,
 		computed_props,
 		raw_response_import_normalized,
+		getRequestTypeByType,
 	};
 };
 

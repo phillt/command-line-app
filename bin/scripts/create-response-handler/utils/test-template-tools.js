@@ -68,14 +68,24 @@ class TestTemplateTools {
 		return yields;
 	}
 
-	static buildValidateResponseComputedData(mixin_name, response_name, response, computed_props) {
+	static buildValidateResponseComputedData(
+		mixin_name,
+		response_name,
+		response,
+		computed_props,
+		request_call_name
+	) {
+		if (!response || !computed_props?.length || computed_props.length < 1) {
+			return "";
+		}
+
 		return `
 		 const provideExpectedComputedValuesWithResponse = function* () {
 		     yield ["${response_name}", ${response}, ${response}];
 		     ${this.buildResponseComputedYield(computed_props, response)}
 		 }
 		 
-		 validateComputedDataWithResponse(${mixin_name}, provideExpectedComputedValuesWithResponse, (v) => v.${response_name}(), {});
+		 validateComputedDataWithResponse(${mixin_name}, provideExpectedComputedValuesWithResponse, (v) => v.${request_call_name}(), {});
 		`;
 	}
 }

@@ -10,6 +10,7 @@ const testTemplate = function (template_variables) {
 		response_name,
 		default_url,
 		computed_props,
+		getRequestTypeByType,
 	} = naming_helper(template_variables);
 
 	return `
@@ -26,7 +27,8 @@ describe("${dash_name} tests", function () {
 		mixin_name,
 		response_name,
 		raw_response_import_normalized,
-		computed_props
+		computed_props,
+		getRequestTypeByType("fetch").name
 	)}
 });
 `;
