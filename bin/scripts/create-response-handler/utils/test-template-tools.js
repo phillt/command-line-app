@@ -36,7 +36,7 @@ class TestTemplateTools {
 } from "${PathsBuddy.getRelativePathTo("response-handler-tests-factory")}";`;
 	}
 
-	static buildDefaultComputedResponseYield(computed_props = []) {
+	static buildDefaultComputedYield(computed_props = []) {
 		let yields = "";
 
 		computed_props.forEach(({ default_value, key }) => {
@@ -50,18 +50,32 @@ class TestTemplateTools {
 		return `
 		 const provideExpectedComputedValues = function* () {
         yield ["${response_name}", null];
-        ${this.buildDefaultComputedResponseYield(computed_props)}
+        ${this.buildDefaultComputedYield(computed_props)}
     };
 
     validateDefaultApiComputedData(${camel_name}, provideExpectedComputedValues);
 		`;
 	}
 
-	static buildValidateResponseComputedData(response_name, response) {
+	static buildResponseComputedYield(computed_props, response) {
+		let yields = "";
+
+		computed_props.forEach(({ key, mapped_response }) => {
+			yields += `yield ["${key}", ${mapped_response}, ${response}];
+			`;
+		});
+
+		return yields;
+	}
+
+	static buildValidateResponseComputedData(mixin_name, response_name, response, computed_props) {
 		return `
 		 const provideExpectedComputedValuesWithResponse = function* () {
-		     yield ["${response_name}", ${response}, ${response}]
+		     yield ["${response_name}", ${response}, ${response}];
+		     ${this.buildResponseComputedYield(computed_props, response)}
 		 }
+		 
+		 validateComputedDataWithResponse(${mixin_name}, provideExpectedComputedValuesWithResponse, (v) => v.${response_name}(), {});
 		`;
 	}
 }

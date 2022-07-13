@@ -13,16 +13,21 @@ const naming_helper = function ({
 	const camel_name = TextFilter.toCamelCase(name_no_dash);
 	const dash_name = TextFilter.toDashCase(name_no_dash);
 	const response_name = TextFilter.toCamelCase(`${name_no_dash} response`);
+	const raw_response_import_normalized = raw_response.import
+		.replaceAll("{", "")
+		.replaceAll("}", "");
 
 	return {
 		response_name,
 		dash_name,
 		snake_name,
 		camel_name,
+		mixin_name: camel_name,
 		default_url,
 		request_methods,
 		raw_response,
 		computed_props,
+		raw_response_import_normalized,
 	};
 };
 
