@@ -1,7 +1,7 @@
 const TextFilter = require("../../../utils/text-filters/text-filters");
 
 class StoryBuildingTools {
-	static buildSlots(slots) {
+	static buildSlots(slots = []) {
 		let slot_templates = "";
 
 		slots.forEach(

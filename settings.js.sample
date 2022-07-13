@@ -1,0 +1,5 @@
+const SETTINGS = Object.freeze({
+	SALT_PATH: "/absolute/path/to/salt",
+});
+
+module.exports = SETTINGS;

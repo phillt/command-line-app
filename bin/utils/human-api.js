@@ -9,8 +9,7 @@ class HumanApi {
 	SELECT = "select";
 
 	askFor(key, question) {
-		this.#data[key] = prompt(question);
-		return this.#data[key];
+		return prompt(question + " : ");
 	}
 
 	get data() {
@@ -62,55 +61,52 @@ class HumanApi {
 		console.log(`----------------${heading}----------------`);
 	}
 
+	#askQuestionByType(question) {
+		if (
+			HumanApi.#questionIsOptional(question) &&
+			HumanApi.yesOrNo(question.optional) === false
+		) {
+			return;
+		}
+
+		const question_type = this.#checkSurveyQuestionType(question);
+
+		switch (question_type) {
+			case this.SELECT:
+				return this.askFromSelection(question.key, question.choices, question.question);
+			case this.COLLECTION:
+				return this.askForCollection(
+					question.key,
+					question.continue_question,
+					question.collection
+				);
+			case this.OBJECT:
+				return this.askForObject(question.key, question.object);
+			case this.ASK_AND_DEFAULT:
+				return this.askAndDefault(question.key, question.question, question.value);
+			case this.KEY_VALUE_PAIR:
+			default:
+				return this.askFor(question.key, question.question);
+		}
+	}
+
 	survey(survey) {
 		this.hr();
 		for (const question of survey) {
-			if (
-				HumanApi.#questionIsOptional(question) &&
-				HumanApi.yesOrNo(question.optional) === false
-			) {
-				continue;
-			}
-
-			const question_type = this.#checkSurveyQuestionType(question);
-
-			switch (question_type) {
-				case this.SELECT:
-					this.askFromSelection(question.key, question.choices, question.question);
-					break;
-				case this.COLLECTION:
-					this.askForCollection(
-						question.key,
-						question.continue_question,
-						question.collection
-					);
-					break;
-				case this.OBJECT:
-					this.askForObject(question.key, question.object);
-					break;
-				case this.ASK_AND_DEFAULT:
-					this.askAndDefault(question.key, question.question, question.value);
-					break;
-				case this.KEY_VALUE_PAIR:
-				default:
-					this.askFor(question.key, question.question);
-			}
+			this.#data[question.key] = this.#askQuestionByType(question);
 		}
 	}
 
 	askAndDefault(key, value) {
-		this.#data[key] = value;
+		return value;
 	}
 
 	askForObject(object_key, interpolation_data_group) {
-		this.#data[object_key] = HumanApi.#collectObject(interpolation_data_group);
+		return this.#collectObject(interpolation_data_group);
 	}
 
 	askForCollection(collection_key, confirm_question, interpolation_data_group) {
-		this.#data[collection_key] = HumanApi.#buildArrayOfObjects(
-			confirm_question,
-			interpolation_data_group
-		);
+		return this.#buildArrayOfObjects(confirm_question, interpolation_data_group);
 	}
 
 	/**
@@ -126,35 +122,32 @@ class HumanApi {
 		const response = this.normalizedPrompt(question + choose_from);
 
 		if (isNaN(response) && selection.includes(response)) {
-			this.#data[key] = response;
-			return;
+			return response;
 		} else if (!isNaN(response) && selection[response]) {
-			this.#data[key] = selection[response];
-			return;
+			return selection[response];
 		}
 
 		console.log("Please make a valid selection.");
-		this.askFromSelection(selection, question, key);
+		return this.askFromSelection(key, selection, question);
 	}
 
-	static #collectObject(interpolation_data_group) {
+	#collectObject(interpolation_data_group) {
 		const data = {};
 
 		for (const group of interpolation_data_group) {
-			const { question, key } = group;
-			data[key] = prompt(question);
+			data[group.key] = this.#askQuestionByType(group);
 		}
 
 		return data;
 	}
 
-	static #buildArrayOfObjects(continue_question, interpolation_data_group) {
+	#buildArrayOfObjects(continue_question, interpolation_data_group) {
 		const collection = [];
 		let continue_collecting = true;
 
 		while (continue_collecting) {
 			collection.push(this.#collectObject(interpolation_data_group));
-			continue_collecting = this.yesOrNo(continue_question);
+			continue_collecting = HumanApi.yesOrNo(continue_question);
 		}
 
 		return collection;

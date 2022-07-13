@@ -1,4 +1,4 @@
-const StoryBuildingToos = require("../../utils/story-building-tools");
+const StoryBuildingTools = require("../../utils/story-building-tools");
 const TextFilter = require("../../../../utils/text-filters/text-filters");
 
 const componentStoryTemplate = function ({ name, component_type, slots, props }) {
@@ -16,12 +16,12 @@ const Template = (args, {argTypes}) => ({
     props: Object.keys(argTypes),
     components: {${camel_name}},
     template: \`
-        <${dash_name} v-bind="$props">${StoryBuildingToos.buildSlots(slots)}</${dash_name}>
+        <${dash_name} v-bind="$props">${StoryBuildingTools.buildSlots(slots)}</${dash_name}>
     \`,
 });
 
 export const Primary = Template.bind({});
-Primary.args = ${StoryBuildingToos.buildPropArgs(props)};
+Primary.args = ${StoryBuildingTools.buildPropArgs(props)};
 	
 	`;
 };

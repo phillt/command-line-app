@@ -14,7 +14,7 @@ class CommandManager {
 	 */
 	constructor(commands_directory, options) {
 		this.#options = options;
-		this.#createArgv(options);
+		this.#createArgv();
 	}
 
 	#createArgv() {

@@ -10,11 +10,62 @@ const createHalMixin = function () {
 	humanApi.survey([
 		{
 			key: "name",
-			question: "Name of this mixin?",
+			question: "File name (use dash for spaces IE: my-response). no extension.",
 		},
 		{
 			key: "default_url",
 			question: "What is the default URL the api should call?",
+		},
+		{
+			key: "request_methods",
+			optional: "Add request method?",
+			continue_question: "Add another?",
+			collection: [
+				{
+					key: "type",
+					question: "What kind of request?",
+					choices: ["fetch", "post", "delete", "patch", "put"],
+				},
+				{
+					key: "name",
+					question: "Request method name? (camel case IE myRequestMethod)",
+				},
+			],
+		},
+		{
+			key: "raw_response",
+			optional: "Import a raw response?",
+			continue_question: "Add another?",
+			object: [
+				{
+					key: "import",
+					question:
+						"Variable we will be importing. If not default, please include curly braces: { my_var } ",
+				},
+				{
+					key: "from",
+					question: "From path, please don't include quotes: ie path/to/file.js",
+				},
+			],
+		},
+		{
+			key: "computed_props",
+			optional: "Map computed properties (dont' include response) ?",
+			continue_question: "Add another?",
+			collection: [
+				{
+					key: "key",
+					question: "Computed name? (camel case)",
+				},
+				{
+					key: "default_value",
+					question: "Default value?",
+				},
+				{
+					key: "mapped_response",
+					question: "Value when mapped with raw response?",
+				},
+			],
 		},
 	]);
 
