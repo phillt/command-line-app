@@ -1,14 +1,20 @@
-const TextFilter = require("../../../../utils/text-filters/text-filters");
+const ResponseHandlerTools = require("../../utils/response-handler-tools");
+const naming_helper = require("./naming_helper");
 
-const template = function ({ name, default_url }) {
-	const snake_name = TextFilter.toSnakeCase(name);
+const template = function (template_variables) {
+	const { camel_name, response_name, request_methods, default_url } =
+		naming_helper(template_variables);
 
-	const snake_api_namespace = TextFilter.toSnakeCase(name) + "_api";
+	const built_request_methods = ResponseHandlerTools.buildRequestMethods(
+		camel_name,
+		request_methods
+	);
+
 	return `
 export default {
     data: function () {
         return {
-            ${snake_api_namespace}: {
+            ${camel_name}: {
                 loading: false,
                 error: null,
                 url: "${default_url}",
@@ -16,30 +22,13 @@ export default {
         }
     },
     computed: {
-        ${snake_name}_response: function () {
-            return this.$hal.data?.[this.${snake_api_namespace}.url] ?? null; 
+        ${response_name}: function () {
+            return this.$hal.data?.[this.${camel_name}.url] ?? null; 
         }
         // Abstract response data here
     },
     methods: {
-        ${TextFilter.toCamelCase(
-			`fetch ` + name
-		)}: async function (url = this.${snake_api_namespace}.url) {
-            this.$set(this.${snake_api_namespace}, "loading", true);
-            this.$set(this.${snake_api_namespace}, "error", null);
-
-            try {
-                await this.$hal.api.fetch(url);
-                if (url !== this.${snake_api_namespace}.url) {
-                    this.$set(this.${snake_api_namespace}, "url", url);
-                }
-
-            } catch (e) {
-                this.$set(this.${snake_api_namespace}, "error", e);
-            } finally {
-                this.$set(this.${snake_api_namespace}, "loading", false);
-            }
-        }
+    	${built_request_methods}
     }
 }
 `;
