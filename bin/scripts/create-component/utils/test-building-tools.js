@@ -23,7 +23,7 @@ class TestBuildingTools {
 		return `${JSON.stringify(options)}`;
 	}
 
-	static buildSlotTests(wrapper_component, slots) {
+	static buildSlotTests(wrapper_component, slots = []) {
 		let slot_yields = ``;
 		let slot_options = {};
 		slots.forEach(({ name }) => {

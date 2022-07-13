@@ -47,7 +47,7 @@ class ComponentBuildingTools {
 		}`;
 	}
 
-	static buildSlots(slots) {
+	static buildSlots(slots = []) {
 		let slot_templates = "";
 		slots.forEach(
 			({ name }) =>
